@@ -1,4 +1,4 @@
-package view;
+package game;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -30,7 +30,6 @@ public class HomeWindow {
             }
         });
     }
-
 
     public void showHomeWindow(){
         JFrame frame = new JFrame("Tic-Tac-Toe");

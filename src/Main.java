@@ -1,5 +1,5 @@
-import view.HomeWindow;
-import view.Style;
+import game.HomeWindow;
+import game.Style;
 
 public class Main {
     public static void main(String[] args) {

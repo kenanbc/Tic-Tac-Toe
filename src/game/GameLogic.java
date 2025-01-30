@@ -1,10 +1,10 @@
-package view;
+package game;
 
 import javax.swing.*;
 
-import static view.ComputerPlay.setWonSign;
+import java.util.Arrays;
 
-public class GameLogic {
+public final class GameLogic{
 
     public static boolean buttonSet(JButton button, boolean stateOfSign){
         button.setEnabled(false);
@@ -24,7 +24,6 @@ public class GameLogic {
             return "X";
     }
 
-
     public static boolean isMovesLeft(int[][] board){
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
@@ -35,11 +34,12 @@ public class GameLogic {
         return false;
     }
 
-    public static boolean checkMatrix(int[][] board){
+    public static boolean checkMatrix(int[][] board, SetWonSign currentGame){
         int diagonalCounter = 0;
         int secondDiagonalCounter = 0;
         boolean rowState = false;
         boolean columnState = false;
+
 
         for (int i = 0; i < 3; i++) {
             if (board[i][i] == board[0][0] && (board[i][i] == 0 || board[i][i] == 1)) {
@@ -57,7 +57,7 @@ public class GameLogic {
                     break;
                 }
                 rowState = true;
-                setWonSign(board[i][j] == 1 ?  'X' :  'O');
+                currentGame.setWonSign(board[i][j] == 1 ?  'X' :  'O');
             }
             if(rowState)
                 return rowState;
@@ -70,18 +70,24 @@ public class GameLogic {
                     break;
                 }
                 columnState = true;
-                setWonSign(board[i][j] == 1 ?  'X' :  'O');
+                currentGame.setWonSign(board[i][j] == 1 ?  'X' :  'O');
             }
             if(columnState)
                 return columnState;
         }
 
         if(diagonalCounter == 3){
-            setWonSign(board[0][0] == 1 ?  'X' :  'O');
+            currentGame.setWonSign(board[0][0] == 1 ?  'X' :  'O');
         }
         else if(secondDiagonalCounter == 3){
-            setWonSign(board[0][2] == 1 ?  'X' :  'O');
+            currentGame.setWonSign(board[0][2] == 1 ?  'X' :  'O');
         }
         return diagonalCounter == 3 || secondDiagonalCounter == 3 || rowState || columnState;
+    }
+
+    public static void resetBoard(int[][] board){
+        for (int[] num : board) {
+            Arrays.fill(num, 2);
+        }
     }
 }

@@ -1,4 +1,4 @@
-package view;
+package game;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
-public class GameWindow {
+public class GameWindow implements SetWonSign{
     private JPanel gamePanel;
     private JButton button00;
     private JButton button21;
@@ -33,11 +33,17 @@ public class GameWindow {
                                 {2, 2, 2}
                             };
 
-    char wonSign = ' ';
+    private static char wonSign = ' ';
     int playerOneScore = 0;
     int playerTwoScore = 0;
+
+    @Override
+    public void setWonSign(char wonSign) {
+        GameWindow.wonSign = wonSign;
+    }
+
     public GameWindow(){
-        //view.Style.setButtonStyle(innerPanel);
+
         Style.setBoldFont(playerOneLabel);
         Style.setBoldFont(playerTwoLabel);
         Style.setDefaultLabelFont(playerOneLabel);
@@ -51,109 +57,109 @@ public class GameWindow {
         button00.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                buttonSet(button00);
+                stateOfSign = GameLogic.buttonSet(button00, stateOfSign);
                 int num = stateOfSign ? 1 : 0;
                 board[0][0] = num;
-                if(checkMatrix())
+                if(GameLogic.checkMatrix(board, GameWindow.this))
                     setResult();
                 else
-                    checkPossibleMoves();
+                    setTieResult();
             }
         });
         button01.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                buttonSet(button01);
+                stateOfSign = GameLogic.buttonSet(button01, stateOfSign);
                 int num = stateOfSign ? 1 : 0;
                 board[0][1] = num;
-                if(checkMatrix())
+                if(GameLogic.checkMatrix(board, GameWindow.this))
                     setResult();
                 else
-                    checkPossibleMoves();
+                    setTieResult();
             }
         });
         button02.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                buttonSet(button02);
+                stateOfSign = GameLogic.buttonSet(button02, stateOfSign);
                 int num = stateOfSign ? 1 : 0;
                 board[0][2] = num;
-                if(checkMatrix())
+                if(GameLogic.checkMatrix(board, GameWindow.this))
                     setResult();
                 else
-                    checkPossibleMoves();
+                    setTieResult();
             }
         });
         button10.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                buttonSet(button10);
+                stateOfSign = GameLogic.buttonSet(button10,stateOfSign);
                 int num = stateOfSign ? 1 : 0;
                 board[1][0] = num;
-                if(checkMatrix())
+                if(GameLogic.checkMatrix(board, GameWindow.this))
                     setResult();
                 else
-                    checkPossibleMoves();
+                    setTieResult();
             }
         });
         button11.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                buttonSet(button11);
+                stateOfSign = GameLogic.buttonSet(button11, stateOfSign);
                 int num = stateOfSign ? 1 : 0;
                 board[1][1] = num;
-                if(checkMatrix())
+                if(GameLogic.checkMatrix(board, GameWindow.this))
                     setResult();
                 else
-                    checkPossibleMoves();
+                    setTieResult();
             }
         });
         button12.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                buttonSet(button12);
+                stateOfSign = GameLogic.buttonSet(button12, stateOfSign);
                 int num = stateOfSign ? 1 : 0;
                 board[1][2] = num;
-                if(checkMatrix())
+                if(GameLogic.checkMatrix(board, GameWindow.this))
                     setResult();
                 else
-                    checkPossibleMoves();
+                    setTieResult();
             }
         });
         button20.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                buttonSet(button20);
+                stateOfSign = GameLogic.buttonSet(button20, stateOfSign);
                 int num = stateOfSign ? 1 : 0;
                 board[2][0] = num;
-                if(checkMatrix())
+                if(GameLogic.checkMatrix(board, GameWindow.this))
                     setResult();
                 else
-                    checkPossibleMoves();
+                    setTieResult();
             }
         });
         button21.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                buttonSet(button21);
+                stateOfSign = GameLogic.buttonSet(button21, stateOfSign);
                 int num = stateOfSign ? 1 : 0;
                 board[2][1] = num;
-                if(checkMatrix())
+                if(GameLogic.checkMatrix(board, GameWindow.this))
                     setResult();
                 else
-                    checkPossibleMoves();
+                    setTieResult();
             }
         });
         button22.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                buttonSet(button22);
+                stateOfSign = GameLogic.buttonSet(button22, stateOfSign);
                 int num = stateOfSign ? 1 : 0;
                 board[2][2] = num;
-                if(checkMatrix())
+                if(GameLogic.checkMatrix(board, GameWindow.this))
                     setResult();
                 else
-                    checkPossibleMoves();
+                    setTieResult();
             }
         });
         repeatButton.addActionListener(new ActionListener() {
@@ -174,11 +180,7 @@ public class GameWindow {
 
                 stateOfSign = false;
                 wonSign = ' ';
-                for (int i = 0; i < board.length; i++) {
-                    for (int j = 0; j < board[i].length; j++) {
-                        board[i][j] = 2;
-                    }
-                }
+                GameLogic.resetBoard(board);
 
             }
         });
@@ -193,87 +195,50 @@ public class GameWindow {
     }
 
     public void showGameWindow(){
+        GameWindow gameWindow = new GameWindow();
         JFrame frame = new JFrame("Tic-Tac-Toe");
-        frame.setContentPane(new GameWindow().gamePanel);
+        frame.setContentPane(gameWindow.gamePanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        //openInputDialog();
+        gameWindow.openInputDialog();
     }
 
-    private String switchSign(boolean stateOfSign){
-        if(stateOfSign)
-            return "O";
-        else
-            return "X";
-    }
+    private void openInputDialog() {
+        JTextField textField1 = new JTextField(10);
+        JTextField textField2 = new JTextField(10);
 
-    private void buttonSet(JButton button){
-        button.setEnabled(false);
-        button.setText(switchSign(stateOfSign));
-        stateOfSign = !stateOfSign;
-    }
 
-    private boolean checkMatrix(){
-        int diagonalCounter = 0;
-        int secondDiagonalCounter = 0;
-        boolean rowState = false;
-        boolean columnState = false;
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new GridLayout(4, 1, 10, 10));
+        inputPanel.add(new JLabel("Name 1:"));
+        inputPanel.add(textField1);
+        inputPanel.add(new JLabel("Name 2:"));
+        inputPanel.add(textField2);
 
-        for (int i = 0; i < 3; i++) {
-            if (board[i][i] == board[0][0] && (board[i][i] == 0 || board[i][i] == 1)) {
-                diagonalCounter++;
-            }
-            if (board[i][2 - i] == board[0][2] && (board[i][2 - i] == 0 || board[i][2 - i] == 1)) {
-                secondDiagonalCounter++;
-            }
+        int result = JOptionPane.showConfirmDialog(
+                gamePanel,
+                inputPanel,
+                "Enter Names",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (result == JOptionPane.OK_OPTION) {
+            playerOneLabel.setText(textField1.getText());
+            playerTwoLabel.setText(textField2.getText());
         }
-
-        for (int i = 0; i < 3; i++) {
-            for (int j = 1; j < 3; j++) {
-                if (board[i][j] != board[i][0] || (board[i][j] != 0 && board[i][j] != 1)) {
-                    rowState = false;
-                    break;
-                }
-                rowState = true;
-                wonSign = board[i][j] == 1 ?  'X' :  'O';
-            }
-            if(rowState)
-                break;
-        }
-
-        for (int j = 0; j < 3; j++) {
-            for (int i = 1; i < 3; i++) {
-                if (board[i][j] != board[0][j] || (board[i][j] != 0 && board[i][j] != 1)) {
-                    columnState = false;
-                    break;
-                }
-                columnState = true;
-                wonSign = board[i][j] == 1 ?  'X' :  'O';
-            }
-            if(columnState)
-                break;
-        }
-
-        if(diagonalCounter == 3){
-            wonSign = board[0][0] == 1 ?  'X' :  'O';
-        }
-        else if(secondDiagonalCounter == 3){
-            wonSign = board[0][2] == 1 ?  'X' :  'O';
-        }
-
-        return diagonalCounter == 3 || secondDiagonalCounter == 3 || rowState || columnState;
     }
 
     private void setResult(){
         if(wonSign == 'X'){
-            resultLabel.setText("Player ONE won!");
+            resultLabel.setText(playerOneLabel.getText() +" won!");
             playerOneScore++;
             playerOneScoreLabel.setText(String.valueOf(playerOneScore));
         }else if(wonSign == 'O'){
-            resultLabel.setText("Player TWO won!");
+            resultLabel.setText(playerTwoLabel.getText() + " won!");
             playerTwoScore++;
             playerTwoScoreLabel.setText(String.valueOf(playerTwoScore));
         }
@@ -283,17 +248,10 @@ public class GameWindow {
         changeStateOfAllButtons(false);
     }
 
-    private void checkPossibleMoves(){
-        boolean isPossible = false;
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
-                if(board[i][j] == 2)
-                    isPossible = true;
-            }
-        }
-
-        if(!isPossible){
+    private void setTieResult(){
+        if(!GameLogic.isMovesLeft(board)){
             resultLabel.setText("TIE");
+            Style.setTextColor(resultLabel, Color.RED);
             resultLabel.setVisible(true);
         }
     }
@@ -309,29 +267,4 @@ public class GameWindow {
         button21.setEnabled(state);
         button22.setEnabled(state);
     }
-
-//    private void openInputDialog() {
-//        JTextField textField1 = new JTextField(10);
-//        JTextField textField2 = new JTextField(10);
-//
-//        JPanel inputPanel = new JPanel();
-//        inputPanel.setLayout(new GridLayout(2, 2));
-//        inputPanel.add(new JLabel("Name 1:"));
-//        inputPanel.add(textField1);
-//        inputPanel.add(new JLabel("Name 2:"));
-//        inputPanel.add(textField2);
-//
-//        int result = JOptionPane.showConfirmDialog(
-//                gamePanel,
-//                inputPanel,
-//                "Enter Names",
-//                JOptionPane.OK_CANCEL_OPTION,
-//                JOptionPane.PLAIN_MESSAGE
-//        );
-//
-//        if (result == JOptionPane.OK_OPTION) {
-//            playerOneLabel.setText(textField1.getText());
-//            playerTwoLabel.setText(textField2.getText());
-//        }
-//    }
 }
